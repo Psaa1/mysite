@@ -1,6 +1,6 @@
 # <App Name>
 
-A simple Django web application generated on ChatGPT 5.2.  
+A simple Django library web application generated on ChatGPT 5.2.  
 
 ## Requirements
 - Python 3.11+ (or your preferred version)
