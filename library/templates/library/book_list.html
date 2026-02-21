@@ -1,36 +1,78 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Books</title>
-</head>
-<body>
-  <h1>Books</h1>
+{% extends "library/base.html" %}
 
-  <form method="get">
-    <input type="text" name="q" value="{{ q }}" placeholder="Search title or author" />
-    <button type="submit">Search</button>
-  </form>
+{% block title %}Books{% endblock %}
+{% block page_title %}Books{% endblock %}
+{% block page_subtitle %}
+  <p>Search by title or author to quickly find catalog entries.</p>
+{% endblock %}
 
-  <p><a href="{% url 'home' %}">Home</a></p>
+{% block content %}
+  <section class="search-wrap card">
+    <form method="get" class="search-form">
+      <input
+        class="input"
+        type="text"
+        name="q"
+        value="{{ q }}"
+        placeholder="Search by title or author"
+        aria-label="Search books"
+      />
+      <button class="btn btn-primary" type="submit">Search</button>
+      {% if q %}
+        <a class="btn btn-secondary" href="{% url 'book_list' %}">Clear</a>
+      {% endif %}
+    </form>
+    {% if q %}
+      <p class="search-summary">Showing results for "{{ q }}".</p>
+    {% endif %}
+  </section>
 
-  <table border="1" cellpadding="6">
-    <tr>
-      <th>Title</th><th>Author</th><th>ISBN</th><th>Year</th><th>Available</th>
-    </tr>
-    {% for b in books %}
-      <tr>
-        <td>{{ b.title }}</td>
-        <td>{{ b.author }}</td>
-        <td>{{ b.isbn }}</td>
-        <td>{{ b.published_year }}</td>
-        <td>{{ b.is_available }}</td>
-      </tr>
-    {% empty %}
-      <tr><td colspan="5">No books found.</td></tr>
-    {% endfor %}
-  </table>
-</body>
-</html>
+  {% if books %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Year</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in books %}
+            <tr>
+              <td>{{ b.title }}</td>
+              <td>{{ b.author }}</td>
+              <td>{{ b.isbn }}</td>
+              <td>
+                {% if b.published_year %}
+                  {{ b.published_year }}
+                {% else %}
+                  <span class="muted">Unknown</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if b.is_available %}
+                  <span class="badge badge--success">Available</span>
+                {% else %}
+                  <span class="badge badge--warning">Checked out</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      {% if q %}
+        <p>No books match your search.</p>
+      {% else %}
+        <p>No books in catalog yet.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock %}
 
 

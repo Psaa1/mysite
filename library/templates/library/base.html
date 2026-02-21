@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Library{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'library/styles.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-row">
+      <a class="brand" href="{% url 'home' %}">Library</a>
+      <nav class="main-nav">
+        <a href="{% url 'home' %}" class="{% if request.path == '/' %}is-active{% endif %}">Home</a>
+        <a href="{% url 'book_list' %}" class="{% if '/books/' in request.path %}is-active{% endif %}">Books</a>
+        <a href="{% url 'loan_list' %}" class="{% if '/loans/' in request.path %}is-active{% endif %}">Loans</a>
+        <a href="/admin/">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    {% if messages %}
+      <section class="messages">
+        {% for message in messages %}
+          <p class="message">{{ message }}</p>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    <header class="page-header">
+      <h1>{% block page_title %}Library{% endblock %}</h1>
+      {% block page_subtitle %}{% endblock %}
+    </header>
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

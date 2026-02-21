@@ -1,28 +1,49 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Loans</title>
-</head>
-<body>
-  <h1>Loans</h1>
-  <p><a href="{% url 'home' %}">Home</a></p>
+{% extends "library/base.html" %}
 
-  <table border="1" cellpadding="6">
-    <tr>
-      <th>Book</th><th>Borrower</th><th>Loan date</th><th>Due date</th><th>Returned</th>
-    </tr>
-    {% for l in loans %}
-      <tr>
-        <td>{{ l.book.title }}</td>
-        <td>{{ l.borrower_name }}</td>
-        <td>{{ l.loan_date }}</td>
-        <td>{{ l.due_date }}</td>
-        <td>{% if l.returned_date %}{{ l.returned_date }}{% else %}No{% endif %}</td>
-      </tr>
-    {% empty %}
-      <tr><td colspan="5">No loans found.</td></tr>
-    {% endfor %}
-  </table>
-</body>
-</html>
+{% block title %}Loans{% endblock %}
+{% block page_title %}Loans{% endblock %}
+{% block page_subtitle %}
+  <p>Track active borrowing, due dates, and returns.</p>
+{% endblock %}
+
+{% block content %}
+  {% if loans %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>Borrower</th>
+            <th>Loan Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for l in loans %}
+            <tr>
+              <td>{{ l.book.title }}</td>
+              <td>{{ l.borrower_name }}</td>
+              <td>{{ l.loan_date|date:"M j, Y" }}</td>
+              <td>{{ l.due_date|date:"M j, Y" }}</td>
+              <td>
+                {% if l.returned_date %}
+                  <span class="badge badge--success">Returned</span>
+                  <span class="muted">{{ l.returned_date|date:"M j, Y" }}</span>
+                {% elif l.due_date < today %}
+                  <span class="badge badge--danger">Overdue</span>
+                {% else %}
+                  <span class="badge badge--warning">Active</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>No loans found.</p>
+    </div>
+  {% endif %}
+{% endblock %}

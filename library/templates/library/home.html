@@ -1,22 +1,29 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Library Home</title>
-</head>
-<body>
-  <h1>Library Dashboard</h1>
+{% extends "library/base.html" %}
 
-  <ul>
-    <li>Total books: {{ total_books }}</li>
-    <li>Available books: {{ available_books }}</li>
-    <li>Active loans: {{ active_loans }}</li>
-  </ul>
+{% block title %}Library Dashboard{% endblock %}
+{% block page_title %}Library Dashboard{% endblock %}
+{% block page_subtitle %}
+  <p>Overview of catalog availability and current borrowing activity.</p>
+{% endblock %}
 
-  <p>
-    <a href="{% url 'book_list' %}">View books</a> |
-    <a href="{% url 'loan_list' %}">View loans</a> |
-    <a href="/admin/">Admin</a>
-  </p>
-</body>
-</html>
+{% block content %}
+  <section class="stat-grid">
+    <article class="card">
+      <p class="stat-label">Total Books</p>
+      <p class="stat-value">{{ total_books }}</p>
+    </article>
+    <article class="card">
+      <p class="stat-label">Available Books</p>
+      <p class="stat-value">{{ available_books }}</p>
+    </article>
+    <article class="card">
+      <p class="stat-label">Active Loans</p>
+      <p class="stat-value">{{ active_loans }}</p>
+    </article>
+  </section>
+
+  <section class="actions">
+    <a class="btn btn-primary" href="{% url 'book_list' %}">Browse Books</a>
+    <a class="btn btn-secondary" href="{% url 'loan_list' %}">View Loans</a>
+  </section>
+{% endblock %}

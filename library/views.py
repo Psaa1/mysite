@@ -1,6 +1,7 @@
 
 # Create your views here.
 from django.shortcuts import render
+from django.utils import timezone
 from .models import Book, Loan
 
 
@@ -31,4 +32,8 @@ def book_list(request):
 
 def loan_list(request):
     loans = Loan.objects.select_related("book").all()
-    return render(request, "library/loan_list.html", {"loans": loans})
+    return render(
+        request,
+        "library/loan_list.html",
+        {"loans": loans, "today": timezone.localdate()},
+    )
